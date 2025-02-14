@@ -1,0 +1,7 @@
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\bin\Debug\DynamicRegex.xml
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\bin\Debug\DynamicRegex.dll
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\bin\Debug\DynamicRegex.pdb
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\obj\Debug\DynamicRegex.csproj.AssemblyReference.cache
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\obj\Debug\DynamicRegex.csproj.CoreCompileInputs.cache
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\obj\Debug\DynamicRegex.dll
+C:\Users\unkno\Documents\Visual Studio Projects\DynamicRegex\obj\Debug\DynamicRegex.pdb

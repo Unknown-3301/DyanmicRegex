@@ -1,0 +1,589 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DynamicRegex</name>
+    </assembly>
+    <members>
+        <member name="T:DynamicRegex.AppliedSettings">
+            <summary>
+            A class to manage pattern settings. This is mainly used to solve negation related issues with composite code.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.Original">
+            <summary>
+            the original settings parsed.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.Applied">
+            <summary>
+            The settings after applying settings from the higher code (composite code). If the code is not related to a composite code, this is the same as the original settings.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.OriginalMinRepeat">
+            <summary>
+            MinRepeat of <see cref="P:DynamicRegex.AppliedSettings.Original"/>.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.OriginalMaxRepeat">
+            <summary>
+            MaxRepeat of <see cref="P:DynamicRegex.AppliedSettings.Original"/>.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.OriginalNegation">
+            <summary>
+            Negation of <see cref="P:DynamicRegex.AppliedSettings.Original"/>.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.MinRepeat">
+            <summary>
+            MinRepeat of <see cref="P:DynamicRegex.AppliedSettings.Applied"/>.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.MaxRepeat">
+            <summary>
+            MaxRepeat of <see cref="P:DynamicRegex.AppliedSettings.Applied"/>.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.AppliedSettings.Negation">
+            <summary>
+            Negation of <see cref="P:DynamicRegex.AppliedSettings.Applied"/>.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.AppliedSettings.#ctor(DynamicRegex.PatternSettings)">
+            <summary>
+            Creates a new object. It sets Applied = original initially.
+            </summary>
+            <param name="original"></param>
+        </member>
+        <member name="T:DynamicRegex.Codes.ChoiceCode">
+            <summary>
+            The pattern code that checks if the substring is an element in a set of choices.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Codes.ChoiceCode.#ctor(System.String[])">
+            <summary>
+            Creates a new instance.
+            </summary>
+            <param name="choices">The pattern choices.</param>
+        </member>
+        <member name="M:DynamicRegex.Codes.ChoiceCode.TryParse(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.ChoiceCode.GetPatternLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Codes.CompositionCode">
+            <summary>
+            The pattern code for combining other pattern codes to create more complex codes.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Codes.CompositionCode.Settings">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.CompositionCode.#ctor(DynamicRegex.IPattern)">
+            <summary>
+            Creates a new instance.
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:DynamicRegex.Codes.CompositionCode.TryParse(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.CompositionCode.GetPatternLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Codes.FreeCode">
+            <summary>
+            A pattern code type for giving no constraints for any character.
+            Note that if Negation is applied to this code, it becomes an EOF code that checks if the end of the string has been reached (since it is the opposite of allowing any char)
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Codes.FreeCode.TryParse(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.FreeCode.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.FreeCode.GetPatternLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Codes.PatternCode">
+            <summary>
+            The abstract class for pattern codes.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.Codes.PatternCode.settings">
+            <inheritdoc/>
+        </member>
+        <member name="P:DynamicRegex.Codes.PatternCode.Settings">
+            <inheritdoc/>
+        </member>
+        <member name="P:DynamicRegex.Codes.PatternCode.FeatureName">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.PatternCode.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.PatternCode.GetPatternLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <summary>
+            Returns the maximum length of the substring in <paramref name="text"/> starting from <paramref name="startIndex"/> that follows the pattern, or -1 if no substring was found to follow the pattern.
+            </summary>
+            <param name="text">The text to check.</param>
+            <param name="startIndex">The index to start checking for pattern matching.</param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.Codes.PatternCode.TryParse(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Attempts to parse a pattern code from the pattern text.
+            </summary>
+            <param name="pattern">The pattern to parse from.</param>
+            <param name="startIndex">The index to start parsing.</param>
+            <param name="endIndex">The index after parsing.</param>
+            <param name="featureNames"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DynamicRegex.Codes.RangeCode">
+            <summary>
+            The pattern code for UTF16 range check.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Codes.RangeCode.RangeStart">
+            <summary>
+            The start of the UTF16 range (inclusive).
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Codes.RangeCode.RangeEnd">
+            <summary>
+            The end of the UTF16 range (inclusive).
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Codes.RangeCode.#ctor(System.Char,System.Char)">
+            <summary>
+            Creates a new range pattern.
+            </summary>
+            <param name="rangeStart">The start range.</param>
+            <param name="rangeEnd">The end range.</param>
+        </member>
+        <member name="M:DynamicRegex.Codes.RangeCode.TryParse(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.RangeCode.GetPatternLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Codes.ReferenceCode">
+            <summary>
+            The pattern that references another pattern.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Codes.ReferenceCode.Reference">
+            <summary>
+            The referenced pattern.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Codes.ReferenceCode.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Codes.ReferenceCode.#ctor(System.String)">
+            <summary>
+            Creates a new reference pattern.
+            </summary>
+            <param name="referenceName">The referenced pattern name.</param>
+        </member>
+        <member name="M:DynamicRegex.Codes.ReferenceCode.TryParse(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Codes.ReferenceCode.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Exact">
+            <summary>
+            Represent a pattern that compares the text letter-by-letter with the pattern.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Exact.Settings">
+            <inheritdoc/>
+        </member>
+        <member name="P:DynamicRegex.Exact.FeatureName">
+            <summary>
+            It is redundant here. as the feature is the text itself (<see cref="P:DynamicRegex.Exact.Text"/>).
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Exact.Text">
+            <summary>
+            The pattern text.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Exact.#ctor(System.String)">
+            <summary>
+            Creates a new Exact.
+            </summary>
+            <param name="t"></param>
+        </member>
+        <member name="M:DynamicRegex.Exact.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.IPattern">
+            <summary>
+            The interface for all pattern types
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.IPattern.Settings">
+            <summary>
+            The settings of the pattern.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.IPattern.FeatureName">
+            <summary>
+            Represents the name of this pattern that will be saved during pattern matching.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.IPattern.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <summary>
+            Returns the length of the largest valid text that follows the pattern (-1 if the text is invalid to the pattern).
+            </summary>
+            <param name="text">The text</param>
+            <param name="startIndex">The index to start scanning from for the pattern.</param>
+            <param name="data">Feature data.</param>
+            <returns></returns>
+        </member>
+        <member name="T:DynamicRegex.Operations.OpAND">
+            <summary>
+            The operation for choosing either two patterns (the shortest)
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpAND.#ctor">
+            <summary>
+            Creates a new operation.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpAND.CreateNew">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpAND.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Operations.OpOR">
+            <summary>
+            The operation for choosing either of two patterns (the longest).
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpOR.#ctor">
+            <summary>
+            Creates a new operation.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpOR.CreateNew">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpOR.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Operations.OpORDER">
+            <summary>
+            The operation for two sequential patterns.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpORDER.#ctor">
+            <summary>
+            Create a new operation.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpORDER.CreateNew">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Operations.OpORDER.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DynamicRegex.Operations.PatternOperation">
+            <summary>
+            The abstract class for any pattern operation used for composite pattern.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.Operations.PatternOperation.p1">
+            <summary>
+            The left hand side pattern.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.Operations.PatternOperation.p2">
+            <summary>
+            The right hand side pattern.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Operations.PatternOperation.P1">
+            <summary>
+            The left hand side pattern.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Operations.PatternOperation.P2">
+            <summary>
+            The right hand side pattern.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.Operations.PatternOperation.settings">
+            <summary>
+            The settings of the operation.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Operations.PatternOperation.Settings">
+            <inheritdoc/>
+        </member>
+        <member name="P:DynamicRegex.Operations.PatternOperation.FeatureName">
+            <summary>
+            It is redundant here.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.Operations.PatternOperation.Name">
+            <summary>
+            The string that represents the symbol of the operation.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Operations.PatternOperation.GetLength(System.String,System.Int32,PatternMatching.FeatureData)">
+            <inheritdoc/>
+        </member>
+        <member name="M:DynamicRegex.Operations.PatternOperation.CreateNew">
+            <summary>
+            Create a new instance of the operation.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DynamicRegex.Pattern">
+            <summary>
+            The main class for pattern matching.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.Pattern.#ctor(System.String)">
+            <summary>
+            Creates a new pattern object.
+            </summary>
+            <param name="pattern"></param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:DynamicRegex.Pattern.GetPatternLength(System.String,System.Int32)">
+            <summary>
+            Returns the maximum length of the substring in <paramref name="text"/> starting from <paramref name="startIndex"/> that follows the pattern, or -1 if no substring was found to follow the pattern.
+            </summary>
+            <param name="text">The text to check.</param>
+            <param name="startIndex">The index to start checking for pattern matching.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.Pattern.GetPatternLength(System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}}@)">
+            <summary>
+            Returns the maximum length of the substring in <paramref name="text"/> starting from <paramref name="startIndex"/> that follows the pattern, or -1 if no substring was found to follow the pattern.
+            <br>Additionally, it extract pattern features to <paramref name="featureMap"/>.</br>
+            </summary>
+            <param name="text">The text to check.</param>
+            <param name="startIndex">The index to start checking for pattern matching.</param>
+            <param name="featureMap"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="T:DynamicRegex.PatternSettings">
+            <summary>
+            A pattern struct for storing modifiers.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.MinRepeat">
+            <summary>
+            The minimum number of repetitions of the pattern code for the pattern to be valid.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.MaxRepeat">
+            <summary>
+            The maximum number of repetitions of the pattern code for the pattern to be valid.
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.Negation">
+            <summary>
+            Whether logical negation is applied to the pattern code (where it works like an inverse).
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.PatternSettings.#ctor(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Creates a new pattern settings.
+            </summary>
+            <param name="minRepeat">The minimum number of repetitions of the pattern code for the pattern to be valid.</param>
+            <param name="maxRepeat">The maximum number of repetitions of the pattern code for the pattern to be valid.</param>
+            <param name="negation">Whether logical negation is applied to the pattern code (where it works like an inverse).</param>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.Default">
+            <summary>
+            The default settings for pattern codes with no explicit settings.
+            <br>MinRepeat = 1</br>
+            <br>MaxRepeat = 1</br>
+            <br>Negation = false</br>
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.ZeroOrOne">
+            <summary>
+            The settings for pattern codes where it allowes the pattern to exist or not.
+            <br>MinRepeat = 0</br>
+            <br>MaxRepeat = 1</br>
+            <br>Negation = false</br>
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.ZeroOrMore">
+            <summary>
+            The settings for pattern codes where it allowes the pattern to repeat multiple times, or not exist.
+            <br>MinRepeat = 0</br>
+            <br>MaxRepeat = int.MaxValue</br>
+            <br>Negation = false</br>
+            </summary>
+        </member>
+        <member name="F:DynamicRegex.PatternSettings.OnceOrMore">
+            <summary>
+            The settings for pattern codes where it allowes the pattern to repeat multiple times, but the pattern must appear at least once.
+            <br>MinRepeat = 1</br>
+            <br>MaxRepeat = int.MaxValue</br>
+            <br>Negation = false</br>
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.PatternSettings.op_Equality(DynamicRegex.PatternSettings,DynamicRegex.PatternSettings)">
+            <summary>
+            Compares all fields in the object.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.PatternSettings.op_Inequality(DynamicRegex.PatternSettings,DynamicRegex.PatternSettings)">
+            <summary>
+            Compares all fields in the object.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DynamicRegex.PatternUtils">
+            <summary>
+            A class used in library that contains useful functions
+            </summary>
+        </member>
+        <member name="E:DynamicRegex.PatternUtils.GetPatternRequests">
+            <summary>
+            An event that stores all pattern reference access requests.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.FlushRequests">
+            <summary>
+            Flush all pattern reference access requests.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.AddCodeName(System.String,DynamicRegex.Codes.PatternCode)">
+            <summary>
+            Adds <paramref name="code"/> to a global record.
+            </summary>
+            <param name="codeName">A unique name to identify the code.</param>
+            <param name="code">The code to add.</param>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.GetPatternCode(System.String)">
+            <summary>
+            Returns a certain code from the global record using <paramref name="codeName"/>.
+            </summary>
+            <param name="codeName"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.TryParseCode(System.String,System.Int32,System.Int32@,System.Collections.Generic.Dictionary{System.String,System.Int32})">
+            <summary>
+            Tries to parse a substring of <paramref name="code"/> starting from <paramref name="startIndex"/> into a pattern code object.
+            </summary>
+            <param name="code"></param>
+            <param name="startIndex"></param>
+            <param name="endIndex">The index where the parser finished parsing (this index is not included in the pattern object string so no need to +1)</param>
+            <param name="features"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.ParseSettings(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parses a substring of <paramref name="s"/> to a code settings object
+            <br></br>
+            <br>Some possible state for the settings:</br>
+            <br>"(~)" : negation only (negation, if mentioned, must be in the beginning)</br>
+            <br>"(?)" : zero or one time </br>
+            <br>"(*)" : zero or more times</br>
+            <br>"(+)" : one or more times (all of these must be before stating the range explicitly)</br>
+            <br>"(n)" : where n is an integer. This spacifies the min and max length n.</br>
+            <br>"(n,)" : where n is an integer. This spacifies the min length n with no upper limit.</br>
+            <br>"(n,m)" : where n is an integer. This spacifies the min length n and max length m.</br>
+            Examples: (~,*), (~,2), (19,)
+            </summary>
+            <param name="s">The string containing code setting</param>
+            <param name="startIndex">The index to start parsing from.</param>
+            <param name="endIndex">The index after parsing</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.TryParseOperation(System.String,System.Int32)">
+            <summary>
+            Attempts to parse a PatternOperation object from a substring string.
+            </summary>
+            <param name="pattern">The text containing the operation.</param>
+            <param name="startIndex">The index to start parsing from</param>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.PatternUtils.TryParseExact(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Attempts to parse an Exact pattern object from a substring.
+            </summary>
+            <param name="pattern">The text containing the pattern.</param>
+            <param name="startIndex">The index to start parsing from.</param>
+            <param name="endIndex">The index after parsing.</param>
+            <returns></returns>
+        </member>
+        <member name="P:DynamicRegex.SeekableStream.BaseReader">
+            <summary>
+            Represents the core of this class.
+            </summary>
+        </member>
+        <member name="P:DynamicRegex.SeekableStream.EOF">
+            <summary>
+            True when the stream reader reaches the end of reading.
+            </summary>
+        </member>
+        <member name="M:DynamicRegex.SeekableStream.#ctor(System.IO.StreamReader)">
+            <summary>
+            Creates a new SeekableStream.
+            </summary>
+            <param name="baseStream">The stream to read from. Note that CanSeek must be true.</param>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:DynamicRegex.SeekableStream.ReadChar">
+            <summary>
+            Read one character and advances the reader position by one.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.SeekableStream.PeekChar">
+            <summary>
+            Read one character without advancing the reader position.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DynamicRegex.SeekableStream.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:PatternMatching.FeatureData">
+            <summary>
+            The class to store and manage feature maps.
+            </summary>
+        </member>
+        <member name="P:PatternMatching.FeatureData.FeatureMap">
+            <summary>
+            A mapping of each feature name to the feature text.
+            </summary>
+        </member>
+        <member name="M:PatternMatching.FeatureData.AddFeature(System.String,System.String)">
+            <summary>
+            Adds a feature text.
+            </summary>
+            <param name="name">The name of the feature.</param>
+            <param name="text">The feature.</param>
+        </member>
+    </members>
+</doc>
